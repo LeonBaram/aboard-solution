@@ -75,5 +75,3 @@ function usersByTask(users, tasks) {
     return clone;
   });
 }
-
-console.log(usersByTask(users, tasks))
