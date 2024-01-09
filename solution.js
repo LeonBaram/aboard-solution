@@ -34,10 +34,46 @@ const tasks = [
  * 3. Don't send your solution here.
  */
 
-/* Solution
- * Space complexity: O(1)
+/**
+ * returns an object where each key is a department, and each value is a list of users in that department
+ *
  * Time complexity: O(u), where u is the number of users
+ * Space complexity: O(u)
+ *
+ * Explanation: The function makes a single pass over the users array (O(u) time). Each user object is cloned exactly once (O(u) space).
  * */
-const findUsersByTask = (task) => users.filter(
-    (user) => user.department === task.department
-);
+function groupUsersByDepartment(users) {
+  const departments = {};
+  for (const user of users) {
+    const dept = user.department;
+    departments[dept] ??= [];
+
+    const clone = structuredClone(user);
+    departments[dept].push(clone);
+  }
+  return departments;
+}
+
+/**
+ * returns an array where each entry is a task with an additional field "users"
+ * the "users" field of each task is an array of users related to that task
+ *
+ * Time complexity: O(u + t), where u and t are the number of users and tasks respectively
+ * Space complexity: O(u + t)
+ *
+ * Explanation: The function makes a single call to groupUsersByDepartment, which has space and time complexity of O(u). Then it makes a single pass over the tasks array (O(t) time), and clones each task object exactly once (O(t) space).
+ * */
+function usersByTask(users, tasks) {
+  const departments = groupUsersByDepartment(users);
+
+  return tasks.map((task) => {
+    const dept = task.department;
+    const deptUsers = departments[dept] ?? [];
+    
+    const clone = structuredClone(task);
+    clone.users = deptUsers;
+    return clone;
+  });
+}
+
+console.log(usersByTask(users, tasks))
